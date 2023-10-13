@@ -2,6 +2,7 @@ const express = require("express");
 const authorsRoutes = require('./routes/authors');
 const characterRoutes = require('./routes/comicCharacters');
 const cookieParser = require("cookie-parser");
+const session = require('express-session');
 
 const app = express();
 
@@ -10,6 +11,11 @@ const PORT = 3001;
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(session({
+  secret: "shhhhtellnobody", 
+  resave: false,
+  saveUninitialized: false
+}))
 
 app.use('/api/authors', authorsRoutes);
 

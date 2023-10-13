@@ -40,4 +40,27 @@ router.post("/", (req, res) => {
   res.sendStatus(201);
 });
 
+router.get("/buildteam", (req, res) => {
+  const { buildteam } = res.session;
+  if(!buildteam) {
+    res.status(200).send('You have not built a team')
+  } else {
+    res.status(200).send(buildteam)
+  }
+})
+
+router.post("/buildteam/addmember", (req, res) =>{
+  const { name, team } = req.body;
+  const newTeam = { name, team };
+  const { buildteam } = req.session;
+  if(buildteam){
+    req.session.buildteam.members.push(newTeam);
+  } else {
+    req.session.buildteam = {
+      members: [newTeam]
+    }
+  };
+  res.sendStatus(201);
+})
+
 module.exports = router;
