@@ -6,10 +6,20 @@ const characters = [
   { name: "Wolverine", team: "X-Men", id: 1 },
   { name: "Thing", team: "Fantastic Four", id: 2 },
   { name: "Deadpool", team: "unaffiliated", id: 3 },
+  { name: "Dad Man", team: "unaffiliated", id: 4 },
+  { name: "Spider-Man", team: "unaffiliated", id: 5 },
+  { name: "Jubilee", team: "X-Men", id: 6 },
 ];
 
 router.get("/", (req, res) => {
-  res.status(200).send(characters);
+  const { team } = req.query;
+  const teamExist = characters.find((exist) => exist.team === team);
+  if(team && teamExist){
+    const filteredCharacters = characters.filter((group) => group.team === team);
+    res.status(200).send(filteredCharacters);
+  }else{
+    res.status(200).send(characters);
+  }
 });
 
 router.get("/:id", (req, res) => {
