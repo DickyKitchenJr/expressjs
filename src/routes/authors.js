@@ -1,4 +1,4 @@
-const { Router } = require('express');
+const { Router } = require("express");
 
 const router = Router();
 
@@ -9,7 +9,19 @@ const authors = [
 ];
 
 router.get("/", (req, res) => {
-  res.status(200).send(authors);
+  // setting up cookies just for practice
+  // verifying if user has a cookie
+  const hasCookie = req.cookies;
+  //if so send no cookie
+  if (hasCookie) {
+    res.status(200).send(authors);
+    console.log("had a cookie")
+    //if not send cookie
+  } else {
+    res.cookie("visited", true);
+    res.status(200).send(authors);
+    console.log("gave a cookie")
+  }
 });
 
 router.get("/:id", (req, res) => {
