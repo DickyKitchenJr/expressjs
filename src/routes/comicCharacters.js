@@ -22,6 +22,15 @@ router.get("/", (req, res) => {
   }
 });
 
+router.get("/buildteam", (req, res) => {
+  const { buildteam } = req.session;
+  if (!buildteam) {
+    res.status(200).send("You have not built a team");
+  } else {
+    res.status(200).send(buildteam);
+  }
+});
+
 router.get("/:id", (req, res) => {
   const { id } = req.params;
   const characterRequested = characters.find(
@@ -40,24 +49,15 @@ router.post("/", (req, res) => {
   res.sendStatus(201);
 });
 
-router.get("/buildteam", (req, res) => {
-  const { buildteam } = res.session;
-  if(!buildteam) {
-    res.status(200).send('You have not built a team')
-  } else {
-    res.status(200).send(buildteam)
-  }
-})
-
 router.post("/buildteam/addmember", (req, res) =>{
-  const { name, team } = req.body;
-  const newTeam = { name, team };
+  const { name } = req.body;
+  const newMember = { name };
   const { buildteam } = req.session;
   if(buildteam){
-    req.session.buildteam.members.push(newTeam);
+    req.session.buildteam.members.push(newMember);
   } else {
     req.session.buildteam = {
-      members: [newTeam]
+      members: [newMember]
     }
   };
   res.sendStatus(201);
