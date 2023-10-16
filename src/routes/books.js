@@ -10,7 +10,6 @@ router.post("/", async (req, res) => {
     res.status(400).send({message:"Book already exist"});
   } else {
     const newBook = await Books.create({book, author, genre});
-    newBook.save();
     res.status(201).send({message:"Book added"})
   }
 });
