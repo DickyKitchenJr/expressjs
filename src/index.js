@@ -25,16 +25,18 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 //have auth route above middleware verifying log in so that it won't be blocked by middleware
 app.use("/api/auth", authRoute);
 
 app.use((req, res, next) => {
-  if (req.session.user) next();
+  console.log('inside auth check middleware')
+  console.log(req.user)
+  if (req.user) next();
   else res.status(401).send("not logged in");
 });
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use("/api/authors", authorsRoutes);
 app.use("/api/books", booksRoute);
