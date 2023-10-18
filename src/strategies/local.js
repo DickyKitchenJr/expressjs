@@ -3,6 +3,23 @@ const { Strategy } = require("passport-local");
 const Users = require("../database/schemas/Users");
 const { comparePassword } = require("../utilities/helpers");
 
+passport.serializeUser((user, done) => {
+  console.log(`Serializing user... ${user}`)
+  done(null, user.id)
+})
+
+passport.deserializeUser(async (id, done) => {
+  console.log(`Deserializing user... ${id}`)
+  try {
+    const user = await Users.findById(id);
+    if(!user) throw new Error('User not found');
+    done(null, user)
+  } catch (error) {
+    console.log(error);
+    done(error, null);
+  }
+})
+
 passport.use(
   new Strategy(
     {
@@ -25,7 +42,7 @@ passport.use(
           console.log("logged in successfully");
           done(null, userDB);
         } else {
-          console.log("incorrect passoword");
+          console.log("incorrect password");
           done(null, false);
         }
       } catch (error) {
