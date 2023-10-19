@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
+const mongoStore = require('connect-mongo');
 require("./strategies/local");
 
 //routes
@@ -9,6 +10,7 @@ const authorsRoutes = require("./routes/authors");
 const characterRoutes = require("./routes/comicCharacters");
 const authRoute = require("./routes/auth");
 const booksRoute = require("./routes/books");
+const MongoStore = require("connect-mongo");
 
 require("./database/index");
 const app = express();
@@ -22,8 +24,16 @@ app.use(
     secret: "shhhhtellnobody",
     resave: false,
     saveUninitialized: false,
+    store: mongoStore.create({
+      mongoUrl: `mongodb+srv://${process.env.MONGO}@cluster0.zb0elao.mongodb.net/`,
+    }),
   })
 );
+
+app.use((req, res, next) => {
+  console.log(`${req.method} at ${req.url}`);
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -32,8 +42,8 @@ app.use(passport.session());
 app.use("/api/auth", authRoute);
 
 app.use((req, res, next) => {
-  console.log('inside auth check middleware')
-  console.log(req.user)
+  console.log("inside auth check middleware");
+  console.log(req.user);
   if (req.user) next();
   else res.status(401).send("not logged in");
 });
