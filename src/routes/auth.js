@@ -2,6 +2,7 @@ const { Router } = require("express");
 const passport = require('passport');
 const Users = require('../database/schemas/Users');
 const { hashPassword, comparePassword } = require('../utilities/helpers');
+const { addUserController } = require("../controllers/auth");
 
 const router = Router();
 
@@ -24,17 +25,6 @@ router.post('/login', passport.authenticate('local'), (req, res) =>{
   res.sendStatus(200);
 })
 
-router.post('/adduser', async (req, res) => {
-  const { name } = req.body;
-  const userDB = await Users.findOne({name});
-  if(userDB){
-    res.status(400).send({ message: "User already exist" });
-  } else {
-    const password = hashPassword(req.body.password);
-    console.log(password);
-    const newUser = await Users.create({ name, password });
-    res.status(201).send({ message: "User added" });
-  }
-})
+router.post('/adduser', addUserController)
 
 module.exports = router;
