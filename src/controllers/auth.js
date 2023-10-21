@@ -1,4 +1,5 @@
 const Users = require('../database/schemas/Users')
+const { hashPassword } = require('../utilities/helpers')
 
 const addUserController = async (req, res) => {
   const { name } = req.body;
